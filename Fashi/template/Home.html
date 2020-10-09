@@ -1,0 +1,162 @@
+{% load static %}
+<html>
+
+<head>
+  <title>Shopkeeper:Fashi</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+
+</head>
+
+<body>
+<div id="navbar">
+    <span>
+        <img src="{% static 'images/logos.PNG' %}" class="logo" width="120" height="70">
+    </span>
+  <a class="active" href="javascript:void(0)">Home</a>
+  <div class="dropdown">
+    <button onclick="myFunction()" class="dropbtn">Men's Wear</button>
+    <div id="myDropdown" class="dropdown-content">
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a><li>
+        </ul>
+
+    </div>
+  </div>
+
+
+<!--<div class="dropdown">-->
+  <!--<button onclick="myFunction()" class="dropbtn">Women's Wear</button>-->
+  <!--<div id="myDropdown2" class="dropdown-content">-->
+    <!--<a href="#home">Home</a>-->
+    <!--<a href="#about">About</a>-->
+    <!--<a href="#contact">Contact</a>-->
+  <!--</div>-->
+<!--</div>-->
+
+<!--<script>-->
+<!--/* When the user clicks on the button,-->
+<!--toggle between hiding and showing the dropdown content */-->
+<!--function myFunction() {-->
+  <!--document.getElementById("myDropdown").classList.toggle("show");-->
+<!--}-->
+
+<!--// Close the dropdown if the user clicks outside of it-->
+<!--window.onclick = function(event) {-->
+  <!--if (!event.target.matches('.dropbtn')) {-->
+    <!--var dropdowns = document.getElementsByClassName("dropdown-content");-->
+    <!--var i;-->
+    <!--for (i = 0; i < dropdowns.length; i++) {-->
+      <!--var openDropdown = dropdowns[i];-->
+      <!--if (openDropdown.classList.contains('show')) {-->
+        <!--openDropdown.classList.remove('show');-->
+      <!--}-->
+    <!--}-->
+  <!--}-->
+<!--}-->
+<!--</script>-->
+
+    <span class="logout-bttn">
+      <i class="fa fa-power-off" id = "logout" type="button"></i>
+  </span>
+  <span class="cart-bttn">
+        <i class="fa fa-shopping-cart" id="carticon" type="button"></i>
+   </span>
+   <span class="wishlist-bttn">
+        <i class="fa fa-heart" id = "wishlisticon" type="button"></i>
+   </span>
+  <form class="form-inline">
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+  </form>
+</div>
+
+<div class="slideshow-container">
+
+<div class="mySlides fade1">
+  <div class="numbertext"></div>
+  <img src="{% static 'images/image4.jpg' %}" class="sale" width="100%" height="500">
+</div>
+
+<div class="mySlides fade">
+  <div class="numbertext"></div>
+  <img src="{% static 'images/image10.PNG' %}" class="sale" width="100%" height="500">
+</div>
+
+<div class="mySlides fade">
+  <div class="numbertext"></div>
+  <img src="{% static 'images/image12.PNG' %}" class="sale" width="100%" height="500">
+</div>
+</div>
+<br>
+
+<div style="text-align:center">
+  <span class="dot"></span>
+  <span class="dot"></span>
+  <span class="dot"></span>
+</div>
+
+</body>
+</html>
+
+<script>
+    window.onscroll = function() {myFunction()};
+
+// Get the navbar
+var navbar = document.getElementById("navbar");
+
+// Get the offset position of the navbar
+var sticky = navbar.offsetTop;
+
+// Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
+function myFunction() {
+  if (window.pageYOffset >= sticky) {
+    navbar.classList.add("sticky")
+  } else {
+    navbar.classList.remove("sticky");
+  }
+}
+
+var slideIndex = 0;
+showSlides();
+
+function showSlides() {
+  var i;
+  var slides = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("dot");
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  }
+  slideIndex++;
+  if (slideIndex > slides.length) {slideIndex = 1}
+  for (i = 0; i < dots.length; i++) {
+    dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
+  setTimeout(showSlides, 2000); // Change image every 2 seconds
+}
+
+/* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+  var dd = document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
