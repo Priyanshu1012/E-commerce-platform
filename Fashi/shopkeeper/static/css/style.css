@@ -23,7 +23,7 @@ body a{
   float: right;
 }
 .searchbtn{
-width:130px;
+width:280px;
 }
 .search-container button {
   float: right;
@@ -1315,7 +1315,7 @@ a.to-buy{
 	padding: 0.3em 0.7em;
   color: #FFF;
   background: #403b37;
-  margin: 0.5em 0 0;
+  margin-left: 950px;
   font-size: 1em;
   display: inline-block;
   line-height: 1.6em;

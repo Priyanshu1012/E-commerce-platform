@@ -8,7 +8,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 {% load cart %}
 <html>
 <head>
-<title>Youth Fashion A Ecommerce Category Flat Bootstrap Responsive Website Template | Home :: w3layouts</title>
+<title>Youth Fashi - Women</title>
+<link rel="icon" type="image/png" href="{% static 'images/icons/home.jpg' %}"/>
 <link href="{% static 'css/bootstrap-3.1.1.min.css' %}" rel='stylesheet' type='text/css' />
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="{% static 'js/jquery.min.js' %}"></script>
@@ -37,6 +38,55 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         pager: true,
       });
     });
+	function add_item(check){
+		var csrfToken=$('input[name="csrfmiddlewaretoken"]').val();
+		var check_id = check.id
+		var new_id=check_id.replace('add','');
+		var id ='item'+new_id;
+		var class_id ='label'+new_id;
+		var delete_id = 'delete'+new_id;
+		$.ajax({
+			type: 'POST',
+			headers: {"X-CSRFToken":csrfToken },
+			url:"/shopkeeper/add/"+new_id+'/',
+			data:{},
+			success:function(response){
+				console.log(response.item_data);			
+				document.getElementById(class_id).innerHTML= "<div class='col-sm-3'><a onclick='remove_item(this)' id='"+delete_id+"' style = 'width: 30; color:#808080;'>-</a></div><div class='col-sm-6'><label id='"+id+"'>"+response.item_data+" in Cart</label></div><div class='col-sm-3'><a onclick='add_item(this)' id='"+new_id+"' style = 'width: 30; color:#808080;'>-</a></div>";
+			},
+		});
+	}
+	function remove_item(check){
+		var csrfToken=$('input[name="csrfmiddlewaretoken"]').val();
+		console.log(check.id);
+		var new_id = check.id;
+		var ret = new_id.replace('delete','');
+		console.log(ret);
+		var id ='item'+ret;
+
+		$.ajax({
+			type: 'POST',
+			headers: {"X-CSRFToken":csrfToken },
+			url:"/shopkeeper/delete/"+ret+'/',
+			data:{},
+			success:function(response){
+				console.log(response.item_data);
+				var quantity = response.item_data
+				var class_id ='label'+ret;
+				var id ='item'+ret;
+				var add_id='add'+ret;
+				var delete_id = 'delete'+ret;
+				
+				if(quantity == 0)
+				{
+					document.getElementById(class_id).innerHTML= "<div><a onclick='add_item(this)' id='"+add_id+"' style = 'width: 100%;background-color: white;font-size: 18; color:green;'>Add to cart</a></div>";
+				}
+				else{
+				document.getElementById(class_id).innerHTML= "<div class='col-sm-3'><a onclick='remove_item(this)' id='"+delete_id+"' style = 'width: 30; color:#808080;'>-</a></div><div class='col-sm-6'><label id='"+id+"'>"+response.item_data+" in Cart</label></div><div class='col-sm-3'><a onclick='add_item(this)' id='"+ret+"' style = 'width: 30; color:#808080;'>-</a></div>";	
+				}
+			},
+		});
+	}
   </script>
   <!-- animation-effect -->
 <link href="{% static 'css/animate.min.css' %}" rel="stylesheet">
@@ -58,19 +108,14 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					<div class="cart box_1">
 						<a href="{% url 'showcart' %}">
 						<h3> <div class="total">
-							<span class="simpleCart_total"></span></div>
 							<img src="{% static 'images/cart.png' %}" alt=""/></h3>
 						</a>
-						<p><a href="javascript:;" class="simpleCart_empty">Empty Cart</a></p>
+						<strong>Go to your cart!</strong>
 
 					</div>
 			</div>
-			<div class="col-sm-2 number animated wow fadeInRight" data-wow-delay=".5s">
-					<span><i class="glyphicon glyphicon-phone"></i>085 596 234</span>
-					<p>Call me</p>
-				</div>
-
-			<div class="col-sm-2 search animated wow fadeInRight" data-wow-delay=".5s">
+			
+			<div class="col-sm-4 search animated wow fadeInRight" data-wow-delay=".5s">
 			  <div class="search-container">
 				<form action="{% url 'search' %}" method="post">
 				{% csrf_token %}
@@ -83,68 +128,19 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	</div>
 		<div class="container">
 			<div class="head-top">
-			<div class="n-avigation">
+	
 
-				<nav class="navbar nav_bottom" role="navigation">
-
-				 <!-- Brand and toggle get grouped for better mobile display -->
-				  <div class="navbar-header nav_2">
-					  <button type="button" class="navbar-toggle collapsed navbar-toggle1" data-toggle="collapse" data-target="#bs-megadropdown-tabs">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					  </button>
-					  <a class="navbar-brand" href="#"></a>
-				   </div>
 				   <!-- Collect the nav links, forms, and other content for toggling -->
 					<div class="collapse navbar-collapse" id="bs-megadropdown-tabs">
 						<ul class="nav navbar-nav nav_1">
 							<li><a href="{% url 'index' %}">Home</a></li>
 							<li class="dropdown mega-dropdown active">
 								<a href="{% url 'women' %}" >Women</a>
-								<!-- <div class="dropdown-menu mega-dropdown-menu">
-									<div class="container-fluid">
-										
-										<div class="tab-content">
-										  <div class="tab-pane active" id="women">
-											<ul class="nav-list list-inline">
-												<li><a href="{% url 'women' %}"><img src="{% static 'images/t7.jpg' %}" class="img-responsive" alt=""/></a></li>
-												<li><a href="{% url 'women' %}"><img src="{% static 'images/t8.jpg' %}" class="img-responsive" alt=""/></a></li>
-												<li><a href="{% url 'women' %}"><img src="{% static 'images/t9.jpg' %}" class="img-responsive" alt=""/></a></li>
-												<li><a href="{% url 'women' %}"><img src="{% static 'images/t11.jpg' %}" class="img-responsive" alt=""/></a></li>
-												<li><a href="{% url 'women' %}"><img src="{% static 'images/t1.jpg' %}" class="img-responsive" alt=""/></a></li>
-												<li><a href="{% url 'women' %}"><img src="{% static 'images/t12.jpg' %}" class="img-responsive" alt=""/></a></li>
-											</ul>
-										  </div>
-									   </div>
-									</div>
-								
 
-								</div> -->
 							</li>
 							<li class="dropdown mega-dropdown active">
 								<a href="{% url 'men' %}" >Men</a>
-								<!-- <div class="dropdown-menu mega-dropdown-menu">
-									<div class="container-fluid">
-									
-										<div class="tab-content">
-										  <div class="tab-pane active" id="men">
-											<ul class="nav-list list-inline">
-												<li><a href="{% url 'men' %}"><img src="{% static 'images/t10.jpg' %}" class="img-responsive" alt=""/></a></li>
-												<li><a href="{% url 'men' %}"><img src="{% static 'images/t2.jpg' %}" class="img-responsive" alt=""/></a></li>
-												<li><a href="{% url 'men' %}"><img src="{% static 'images/t3.jpg' %}" class="img-responsive" alt=""/></a></li>
-												<li><a href="{% url 'men' %}"><img src="{% static 'images/t4.jpg' %}" class="img-responsive" alt=""/></a></li>
-												<li><a href="{% url 'men' %}"><img src="{% static 'images/t5.jpg' %}" class="img-responsive" alt=""/></a></li>
-												<li><a href="{% url 'men' %}"><img src="{% static 'images/t6.jpg' %}" class="img-responsive" alt=""/></a></li>
-											</ul>
-										  </div>
-
-									   </div>
-									</div>
 								
-
-								</div> -->
 							</li>
 							
 							<li class="last"><a href="{% url 'contact' %}">Contact</a></li>
@@ -153,32 +149,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 							{% else %}
 							<li><a href="{% url 'account' %}">Sign In</a></li>
 							{% endif %}
-
-							<li>
-								<div class="banner">
-									<div class="matter-banner">
-										 <div class="slider" >
-											<div class="callbacks_container">
-												  <ul class="rslides" id="slider">
-													<li >
-														  <img src="{% static 'images/image4.jpg' %}" alt=""style="height: 600px; ">
-														<div class="tes animated wow fadeInUp animated" data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
-														
-														</div>
-														</li>
-													  												  </ul>
-											  </div>
-										</div>
-									</div>
-									<div class="clearfix"> </div>
-								</div>
-							</li>
 						</ul>
-
+						
 					 </div><!-- /.navbar-collapse -->
+					 
                     
-				</nav>
-			</div>
+			
 
 
 		<div class="clearfix"> </div>
@@ -191,9 +167,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<!---->
 		</div>
 	</div>
-
-</div>
-<div class="breadcrumbs">
+	<div class="breadcrumbs">
 		<div class="container">
 			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft animated" data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: slideInLeft;">
 				<li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
@@ -201,6 +175,31 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			</ol>
 		</div>
 	</div>
+	<ul>
+		<li>
+			<div class="banner">
+				<div class="matter-banner">
+					 <div class="slider" >
+						<div class="callbacks_container">
+							  <ul class="rslides" id="slider">
+								<li >
+									  <img src="{% static 'images/image4.jpg' %}" alt=""style="height: 600px; ">
+									<div class="tes animated wow fadeInUp animated" data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
+									
+									</div>
+									</li>
+																					</ul>
+						  </div>
+					</div>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+		</li>
+	</ul>
+
+
+</div>
+
 <!--content-->
 <div class="products">
 	<div class="container">
@@ -216,7 +215,20 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						<h3><a href="{% url 'single' item.id %}">{{item.name}}</a></h3>
 						<div class="price">
 								<h5 class="item_price">{{item.price}}</h5>
-								<a href="#" class="item_add">Add To Cart</a>
+								{% if item|is_in_cart:request.session.cart %}
+								<div class="row cart-row" id="label{{ item.id }}">
+								<div class="col-sm-3"><a onclick="remove_item(this)" id="delete{{ item.id }}" value ="{{ item.id }}" style = "width: 30; color:#808080;">-</a></div>
+								<div class="col-sm-6"><label id="item{{item.id}}">{{item|cart_quantity:request.session.cart}} in Cart</label></div>
+								<div class="col-sm-3"><a onclick="add_item(this)" id="{{ item.id }}" value ="{{ item.id }}" style = "width: 30; color:#808080;">+</a></div>
+							</div>
+								{% else %}
+								<div class="row" id="label{{ item.id }}">
+								<a onclick="add_item(this)" id="add{{ item.id }}" value ="{{ item.id }}" style = "width: 100%;background-color: white;font-size: 18; color:green;">Add to Cart</a>
+								<!-- <input name = 'product' hidden type= "text" value='{{item.id}}'>
+									<input type = "submit" class="item_add" value ="Add To Cart" style = "color: green;"> -->
+								</div>
+								{% endif %}
+					
 								<div class="clearfix"> </div>
 						</div>
 					</div>
@@ -272,19 +284,19 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <div class="footer">
 	<div class="container">
 		<div class="footer-top">
-			<div class="col-md-6 top-footer">
+			<div class="col-md-6 top-footer animated wow fadeInLeft" data-wow-delay=".5s">
 				<h3>Follow Us On</h3>
 				<div class="social-icons">
 					<ul class="social">
-						<li><a href="#"><i></i></a> </li>
-						<li><a href="#"><i class="facebook"></i></a></li>	
-						<li><a href="#"><i class="google"></i> </a></li>
-						<li><a href="#"><i class="linked"></i> </a></li>						
+						<li><a href=""><i></i></a> </li>
+						<li><a href=""><i class="facebook"></i></a></li>	
+						<li><a href=""><i class="google"></i> </a></li>
+						<li><a href=""><i class="linked"></i> </a></li>						
 					</ul>
 						<div class="clearfix"></div>
 				 </div>
 			</div>
-			<div class="col-md-6 top-footer1">
+			<div class="col-md-6 top-footer1 animated wow fadeInRight" data-wow-delay=".5s">
 				<h3>Newsletter</h3>
 					<form action="#" method="post">
 						<input type="text" name="email" value="" onfocus="this.value='';" onblur="if (this.value == '') {this.value ='';}">
@@ -294,51 +306,51 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<div class="clearfix"> </div>	
 		</div>	
 	</div>
-	<div class="footer-bottom">
+		<div class="footer-bottom">
 		<div class="container">
-				<div class="col-md-3 footer-bottom-cate">
+				<div class="col-md-3 footer-bottom-cate animated wow fadeInLeft" data-wow-delay=".5s">
 					<h6>Categories</h6>
 					<ul>
-						<li><a href="{% url 'products' %}">Curabitur sapien</a></li>
-						<li><a href="#">Dignissim purus</a></li>
-						<li><a href="{% url 'men' %}">Tempus pretium</a></li>
-						<li><a href="{% url 'products' %}">Dignissim neque</a></li>
-						<li><a href="#">Ornared id aliquet</a></li>
+						<li><a href="">Trousers</a></li>
+						<li><a href="">Pants</a></li>
+						<li><a href="">Formal Pants</a></li>
+						<li><a href="">Palazzo</a></li>
+						<li><a href="">Shirts</a></li>
 						
 					</ul>
 				</div>
-				<div class="col-md-3 footer-bottom-cate">
+				<div class="col-md-3 footer-bottom-cate animated wow fadeInLeft" data-wow-delay=".5s">
 					<h6>Feature Projects</h6>
 					<ul>
-						<li><a href="{% url 'products' %}">Dignissim purus</a></li>
-						<li><a href="{% url 'men' %}">Curabitur sapien</a></li>
-						<li><a href="#">Tempus pretium</a></li>
-						<li><a href="{% url 'men' %}">Dignissim neque</a></li>
-						<li><a href="{% url 'products' %}">Ornared id aliquet</a></li>
+						<li><a href="">Formal</a></li>
+						<li><a href="">Party Wear</a></li>
+						<li><a href="">Casual Wear</a></li>
+						<li><a href="">Fancy</a></li>
+						<li><a href="">Spritual</a></li>
 					</ul>
 				</div>
-				<div class="col-md-3 footer-bottom-cate">
+				<div class="col-md-3 footer-bottom-cate animated wow fadeInRight" data-wow-delay=".5s">
 					<h6>Top Brands</h6>
 					<ul>
-						<li><a href="{% url 'products' %}">Tempus pretium</a></li>
-						<li><a href="#">Curabitur sapien</a></li>
-						<li><a href="{% url 'men' %}">Dignissim purus</a></li>
-						<li><a href="#">Dignissim neque</a></li>
-						<li><a href="{% url 'men' %}">Ornared id aliquet</a></li>
+						<li><a href="">Lululemon</a></li>
+						<li><a href="">Rolex</a></li>
+						<li><a href="">Hermes</a></li>
+						<li><a href="">Raymond</a></li>
+						<li><a href="">Nike</a></li>
 						
 						
 					</ul>
 				</div>
-				<div class="col-md-3 footer-bottom-cate cate-bottom">
+				<div class="col-md-3 footer-bottom-cate cate-bottom animated wow fadeInRight" data-wow-delay=".5s">
 					<h6>Our Address</h6>
 					<ul>
-						<li><i class="glyphicon glyphicon-map-marker" aria-hidden="true"></i>Address : 12th Avenue, 5th block, <span>Sydney.</span></li>
-						<li><i class="glyphicon glyphicon-envelope" aria-hidden="true"></i>Email : <a href="mailto:info@example.com">info@example.com</a></li>
-						<li><i class="glyphicon glyphicon-earphone" aria-hidden="true"></i>Phone : +1234 567 567</li>
+						<li><i class="glyphicon glyphicon-map-marker" aria-hidden="true"></i>Address : 12th sector, 5th block, <span>Gurgaon</span></li>
+						<li><i class="glyphicon glyphicon-envelope" aria-hidden="true"></i>Email : <a href="mailto:fashiinfo@example.com">info@example.com</a></li>
+						<li><i class="glyphicon glyphicon-earphone" aria-hidden="true"></i>Phone : +91734567567</li>
 					</ul>
 				</div>
 				<div class="clearfix"> </div>
-				<p class="footer-class"> © 2016 Youth Fashion . All Rights Reserved | Design by <a href="http://w3layouts.com/" target="_blank">W3layouts</a> </p>
+				<p class="footer-class animated wow fadeInUp animated" data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;"> © Youth Fashi . Fashion for youth </p>
 			</div>
 	</div>
 </div>

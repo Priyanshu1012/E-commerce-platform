@@ -5,9 +5,10 @@ from shopkeeper.models import *
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
-
+from django.http import JsonResponse
 def index(request):
     cart = request.session.get('cart')
+    print(cart)
     if not cart:
         request.session['cart'] = {}
     template = "index.html"
@@ -29,6 +30,8 @@ def search_item(request):
             else:
                 context = {'item_data': results}
                 return render(request, template, context)
+        else:
+            return(index(request))
 
 
 def Women(request):
@@ -123,7 +126,6 @@ def loginSubmit(request):
         password = request.POST['password']
         try:
             valid = Register.objects.all().filter(email_address=email_address,password=password)
-            print(valid)
         except Exception as e:
             print(e)
         for i in valid:
@@ -161,15 +163,9 @@ def Contactsubmit(request):
     context = {}
     return render(request,template,context)
 
-def Single(request,id):
+def Single_product(request,id):
     template = "single.html"
     item_data = Items.objects.values('name','image','price').filter(id=id)
-    context = {'item_data': item_data}
-    return render(request,template,context)
-
-def Checkout(request):
-    template = "checkout.html"
-    item_data = Items.objects.all()[:12]
     context = {'item_data': item_data}
     return render(request,template,context)
 
@@ -195,6 +191,7 @@ def add_to_cart(request,id):
         price = i.price
         image_cart = i.image
         total_price = cart[product]*i.price
+    print(cart[product])
     data = Cart(
         id = id,
         name = name,
@@ -207,17 +204,22 @@ def add_to_cart(request,id):
 
     template = "index.html"
     item_data = Items.objects.all()[:12]
-    context= {'item_data':item_data}
-    return render(request,template,context)
+    context= {'item_data':cart[product]}
+    return JsonResponse(context)
 
 
 def delete_from_cart(request,id):
     product = id
     cart = request.session.get('cart')
     quantity = cart.get(product)
+    print(quantity)
     if quantity<=1:
+        print(cart)
         cart.pop(product)
+        print(cart)
         item_quantity=0
+        
+        
     else:
         item_quantity = quantity-1 
         cart[product] = quantity-1  
@@ -247,8 +249,8 @@ def delete_from_cart(request,id):
 
     template = "index.html"
     item_data = Items.objects.all()[:12]
-    context= {'item_data':item_data}
-    return render(request,template,context)
+    context= {'item_data': item_quantity}
+    return JsonResponse(context)
         
 def logout (request):
     request.session.clear()
@@ -261,9 +263,21 @@ def showcart(request):
 
     template = "Cart.html"
     cart_data = Cart.objects.all()[:]
-    total_product_price = 0
-    for i in cart_data:
-        c = i.total_price
-        total_product_price = total_product_price + c
-    context= {'cart_data':cart_data,'total_product_price':total_product_price}
-    return render(request,template,context)
+    if cart_data.exists():
+        total_product_price = 0
+        for i in cart_data:
+            c = i.total_price
+            total_product_price = total_product_price + c
+        context= {'cart_data':cart_data,'total_product_price':total_product_price}
+        return render(request,template,context)
+    else:
+        template = "Cart.html"
+        context= {'cart_data':cart_data,'error':1}
+        return render(request,template,context)
+
+def delete_product(request,id):
+    Cart.objects.filter(id=id).delete()
+    del request.session['cart'][id]
+    request.session.modified = True
+    return (showcart(request))
+
